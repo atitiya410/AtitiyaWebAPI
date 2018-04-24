@@ -83,18 +83,31 @@ namespace WebAPI.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public  IActionResult PostProduct(int min , int max)
+        public IActionResult PostProduct([FromBody] MinMax minMax)
         {
-            if (min == 0 && max == 0)
-            { 
-                return BadRequest(ModelState);
+
+            if (minMax.Min == 0 && minMax.Max == 0)
+            {
+                return BadRequest("Enter your number only.");
             }
+            else if (minMax.Min > 0 && minMax.Max == 0) {
 
-           var pro = _context.Product.Where(p => p.UnitPrice>=min && p.UnitPrice<=max);
+                var pr = _context.Product.Where(p => p.UnitPrice >= minMax.Min);
+                return Ok(pr);
 
-            return Ok(pro);
-            
-    
+            }
+            else if (minMax.Min == 0 && minMax.Max > 0)
+            {
+                var pro = _context.Product.Where(p => p.UnitPrice <= minMax.Max);
+                return Ok(pro);
+
+            }
+            else
+            {
+                var produ = _context.Product.Where(p => p.UnitPrice <= minMax.Max && p.UnitPrice >= minMax.Min);
+                return Ok(produ);
+            }
+          
         }
 
         // DELETE: api/Products/5
