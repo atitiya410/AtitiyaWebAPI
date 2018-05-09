@@ -26,10 +26,16 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
+            services.AddCors(options => { options.AddPolicy("AllowAll", builder => {
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+            });
+            });
             // var connection = @"Server=(local)\user=mod;password=1234;Database=trainingapi;Trusted_Connection=True;ConnectRetryCount=0";
             var connection = Configuration.GetConnectionString("ConnectionString");
-
+            
             services.AddDbContext<trainingapiContext>(options => options.UseSqlServer(connection));
         }
 
@@ -40,7 +46,7 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors("AllowAll");
             app.UseMvc();
         }
     }

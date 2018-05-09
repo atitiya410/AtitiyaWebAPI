@@ -7,16 +7,13 @@ namespace WebAPI.Models
     public partial class trainingapiContext : DbContext
     {
         public virtual DbSet<Customer> Customer { get; set; }
+        public virtual DbSet<Hero> Hero { get; set; }
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<OrderItem> OrderItem { get; set; }
         public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<User> User { get; set; }
 
-
-
-
         public trainingapiContext(DbContextOptions<trainingapiContext> options) : base(options) { }
-        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +37,15 @@ namespace WebAPI.Models
                 entity.Property(e => e.Phone).HasMaxLength(20);
             });
 
+            modelBuilder.Entity<Hero>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(50);
+            });
 
             modelBuilder.Entity<Order>(entity =>
             {
